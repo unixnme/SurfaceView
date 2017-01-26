@@ -29,8 +29,6 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback 
 
     protected void onResume() {
         super.onResume();
-        if (camera != null)
-            camera.startPreview();
     }
 
     protected void onPause() {
@@ -49,7 +47,7 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback 
             try {
                 camera.setPreviewDisplay(holder);
             } catch (IOException ie) {
-
+                Log.e(TAG, "setPreviewDisplay fails");
             }
         }
         if (camera != null)
