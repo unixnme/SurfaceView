@@ -14,9 +14,11 @@ import android.view.View;
  */
 
 public class OverlaidView extends View {
+    private static final String TAG = OverlaidView.class.getSimpleName();
 
     private Paint paint;
     private float x,y;
+    private SurfaceViewMain mainInstance;
 
     public OverlaidView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -24,7 +26,10 @@ public class OverlaidView extends View {
         paint.setColor(Color.GREEN);
         paint.setStrokeWidth(3);
         paint.setStyle(Paint.Style.STROKE);
+    }
 
+    public void setMainInstance(SurfaceViewMain instance) {
+        mainInstance = instance;
     }
 
     @Override
@@ -33,10 +38,12 @@ public class OverlaidView extends View {
             x = event.getX();
             y = event.getY();
             invalidate();
+            float focusX = x/(float)getWidth() * 2000 - 1000;
+            float focusY = y/(float)getHeight() * 2000 - 1000;
+            mainInstance.setFocus((int)focusX, (int)focusY);
         }
         return true;
     }
-
 
     @Override
     public void onDraw(Canvas canvas) {
