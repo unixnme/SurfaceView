@@ -37,6 +37,7 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
     private int maxFocusAreas;
     private int maxMeteringAreas;
     private boolean volumeLongPressed;
+    private boolean takePictureLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
     protected void onResume() {
         super.onResume();
         volumeLongPressed = false;
+        takePictureLock = false;
     }
 
     protected void onPause() {
@@ -180,6 +182,11 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (camera != null && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+            if (takePictureLock)
+                // take picture is already in queue; ignore any more take picture requests
+                return true;
+
+            takePictureLock = true;
             if (volumeLongPressed) {
                 Log.i(TAG, "long press");
                 volumeLongPressed = false;
@@ -192,12 +199,14 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
                         camera.takePicture(instance, null, instance);
                     }
                 }, 3000);
-                return false;
             }
-
-            Log.i(TAG, "short press; schedule take pic immediately");
-            camera.takePicture(instance, null, this);
+            else {
+                Log.i(TAG, "short press; schedule take pic immediately");
+                camera.takePicture(instance, null, this);
+            }
+            return true;
         }
+
         return super.onKeyUp(keyCode, event);
     }
 
@@ -209,6 +218,7 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
         } catch (IOException e) {
 
         }
+        takePictureLock = false;
     }
 
     public void onShutter() {
