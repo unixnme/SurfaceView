@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -27,6 +28,7 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
     private int cameraId;
     private int maxFocusAreas;
     private int maxMeteringAreas;
+    private boolean volumeLongPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +40,11 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
         surfaceView.getHolder().addCallback(this);
         overlaidView = (OverlaidView) findViewById(R.id.overlaid_view);
         overlaidView.setMainInstance(this);
-
     }
 
     protected void onResume() {
         super.onResume();
+        volumeLongPressed = false;
     }
 
     protected void onPause() {
@@ -140,6 +142,42 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
         if (success)
             camera.cancelAutoFocus();
     }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            event.startTracking();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event){
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            volumeLongPressed = true;
+            return true;
+        }
+        return onKeyLongPress(keyCode,event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            if (volumeLongPressed) {
+                Log.i(TAG, "long press");
+                volumeLongPressed = false;
+                // take picture in 3 secs
+                return false;
+            }
+
+            Log.i(TAG, "short press");
+            // take picture immediately
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
 }
 
 
