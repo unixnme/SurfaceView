@@ -18,8 +18,6 @@ import java.util.List;
 public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback, Camera.AutoFocusCallback {
 
     private static final String TAG = SurfaceViewMain.class.getSimpleName();
-    private static final int FOCUS_WIDTH = 100;
-    private static final int FOCUS_HEIGHT = 100;
 
     private SurfaceView surfaceView;
     private OverlaidView overlaidView;
@@ -123,16 +121,10 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
         camera.setDisplayOrientation(result);
     }
 
-    public void setFocus(int x, int y) {
+    public void setFocus(Rect focusRect) {
         if (camera == null || maxFocusAreas <= 0)
             return;
 
-        int left = Math.max(-1000, x - FOCUS_WIDTH/2);
-        int right = Math.min(1000, x + FOCUS_WIDTH/2);
-        int top = Math.max(-1000, y - FOCUS_HEIGHT/2);
-        int bot = Math.min(1000, y + FOCUS_HEIGHT/2);
-
-        Rect focusRect = new Rect(left, top, right, bot);
         Camera.Parameters parameters = camera.getParameters();
         List<Camera.Area> focusArea = new ArrayList<>();
         focusArea.add(new Camera.Area(focusRect, 1000));

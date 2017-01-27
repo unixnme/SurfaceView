@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SurfaceViewMain"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
 
             <intent-filter>
