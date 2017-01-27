@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -19,6 +17,9 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback 
     private SurfaceView surfaceView;
     private OverlaidView overlaidView;
     private Camera camera;
+    private Camera.Size previewSize;
+    private int width, height;
+    private int cameraId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,8 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback 
 
     public void surfaceCreated(SurfaceHolder holder) {
         Log.i(TAG, "surface created");
-        camera = Camera.open();
+        cameraId = getCameraId();
+        camera = Camera.open(cameraId);
         if (camera != null) {
             camera.setDisplayOrientation(90);
             try {
@@ -55,17 +57,38 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback 
                 Log.e(TAG, "setPreviewDisplay fails");
             }
         }
-        if (camera != null)
+        if (camera != null) {
+            Camera.Parameters parameters = camera.getParameters();
+            previewSize = parameters.getPreviewSize();
             camera.startPreview();
+        }
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.i(TAG, "surface changed");
+        this.width = width;
+        this.height = height;
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.i(TAG, "surface destroyed");
     }
+
+    private int getCameraId() {
+        int cameraId = -1;
+        int numberOfCameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                cameraId = i;
+                break;
+            }
+        }
+
+        return cameraId;
+    }
+
 }
 
 
