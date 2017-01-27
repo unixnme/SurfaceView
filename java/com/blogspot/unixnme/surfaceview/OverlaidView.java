@@ -6,8 +6,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 
 /**
  * Created by linuxnme on 1/27/17.
@@ -18,12 +22,14 @@ public class OverlaidView extends View {
     private static final float FOCUS_WIDTH = 100;
     private static final float FOCUS_HEIGHT = 100;
 
+    private OverlaidView instance;
     private Paint paint;
     private float x1,x2,y1,y2;
     private SurfaceViewMain mainInstance;
 
     public OverlaidView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        instance = this;
         paint = new Paint();
         paint.setColor(Color.GREEN);
         paint.setStrokeWidth(3);
@@ -63,5 +69,40 @@ public class OverlaidView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         canvas.drawRect(new Rect((int)x1, (int)y1, (int)x2, (int)y2), paint);
+    }
+
+    // animate take picture animation
+    public void animateTakePicture() {
+        final long animationDuration = 100;
+        final float animationAlpha = 0.5f;
+        AlphaAnimation fadeIn = new AlphaAnimation(0, animationAlpha);
+        fadeIn.setDuration(animationDuration);
+        AlphaAnimation fadeOut = new AlphaAnimation(animationAlpha, 0);
+        fadeOut.setDuration(animationDuration);
+        fadeOut.setStartOffset(animationDuration);
+
+        //animation.setBackgroundColor(Color.WHITE);
+        Log.i(TAG, "starting animation");
+
+        AnimationSet animation = new AnimationSet(false);
+        animation.addAnimation(fadeIn);
+        animation.addAnimation(fadeOut);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                instance.setBackgroundColor(Color.WHITE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                instance.setBackgroundColor(Color.TRANSPARENT);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        this.startAnimation(animation);
     }
 }

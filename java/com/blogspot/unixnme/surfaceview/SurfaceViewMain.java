@@ -23,7 +23,7 @@ import java.util.List;
 import static android.os.Environment.DIRECTORY_PICTURES;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
-public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback {
+public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback, Camera.ShutterCallback {
 
     private static final String TAG = SurfaceViewMain.class.getSimpleName();
 
@@ -183,14 +183,14 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
                     @Override
                     public void run() {
                         Log.i(TAG, "schedule take pic after long press");
-                        camera.takePicture(null, null, instance);
+                        camera.takePicture(instance, null, instance);
                     }
                 }, 3000);
                 return false;
             }
 
             Log.i(TAG, "short press; schedule take pic immediately");
-            camera.takePicture(null, null, this);
+            camera.takePicture(instance, null, this);
         }
         return super.onKeyUp(keyCode, event);
     }
@@ -203,6 +203,10 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
         } catch (IOException e) {
 
         }
+    }
+
+    public void onShutter() {
+        overlaidView.animateTakePicture();
     }
 
     // Create an image file name
