@@ -8,6 +8,10 @@
     <SurfaceView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/surface_view_main"
-        android:text="Hello World!" />
+        android:id="@+id/surface_view" />
+
+    <com.blogspot.unixnme.surfaceview.OverlaidView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/overlaid_view" />
 </RelativeLayout>
