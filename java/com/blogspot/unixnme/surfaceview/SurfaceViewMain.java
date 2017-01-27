@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -12,11 +13,18 @@ import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback, Camera.AutoFocusCallback {
+import static android.os.Environment.DIRECTORY_PICTURES;
+import static android.os.Environment.getExternalStoragePublicDirectory;
+
+public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback {
 
     private static final String TAG = SurfaceViewMain.class.getSimpleName();
 
@@ -174,8 +182,28 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
 
             Log.i(TAG, "short press");
             // take picture immediately
+            if (camera != null)
+                camera.takePicture(null, null, this);
         }
         return super.onKeyUp(keyCode, event);
+    }
+
+    public void onPictureTaken(byte[] data, Camera camera) {
+        try {
+            FileOutputStream fos = new FileOutputStream(getFilename());
+            fos.write(data);
+            fos.close();
+        } catch (IOException e) {
+
+        }
+    }
+
+    // Create an image file name
+    private String getFilename() {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String filename = getExternalStoragePublicDirectory(DIRECTORY_PICTURES).getPath().toString() + "/" + timeStamp + ".jpg";
+
+        return filename;
     }
 
 }
