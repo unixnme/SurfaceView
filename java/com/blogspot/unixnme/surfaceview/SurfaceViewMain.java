@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -13,7 +13,6 @@ import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -28,6 +27,7 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
 
     private static final String TAG = SurfaceViewMain.class.getSimpleName();
 
+    private SurfaceViewMain instance;
     private SurfaceView surfaceView;
     private OverlaidView overlaidView;
     private Camera camera;
@@ -41,6 +41,7 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.surface_view_main);
@@ -177,13 +178,19 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
                 Log.i(TAG, "long press");
                 volumeLongPressed = false;
                 // take picture in 3 secs
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i(TAG, "schedule take pic after long press");
+                        camera.takePicture(null, null, instance);
+                    }
+                }, 3000);
                 return false;
             }
 
-            Log.i(TAG, "short press");
-            // take picture immediately
-            if (camera != null)
-                camera.takePicture(null, null, this);
+            Log.i(TAG, "short press; schedule take pic immediately");
+            camera.takePicture(null, null, this);
         }
         return super.onKeyUp(keyCode, event);
     }
