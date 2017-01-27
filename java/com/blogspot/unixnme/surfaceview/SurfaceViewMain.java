@@ -68,7 +68,13 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
         Log.i(TAG, "surface created");
         cameraId = getCameraId();
         camera = Camera.open(cameraId);
+
         if (camera != null) {
+            Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+            Camera.getCameraInfo(cameraId, cameraInfo);
+            if (cameraInfo.canDisableShutterSound)
+                camera.enableShutterSound(false);
+
             try {
                 setCameraDisplayOrientation(this, cameraId, camera);
                 camera.setPreviewDisplay(holder);
