@@ -15,9 +15,15 @@
         android:layout_height="wrap_content"
         android:id="@+id/overlaid_view" />
 
+    <com.blogspot.unixnme.surfaceview.OverlaidTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/countdown_textview"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/switch_camera_FAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/flip_camera" />
+
 </RelativeLayout>

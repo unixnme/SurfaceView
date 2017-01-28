@@ -11,6 +11,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
@@ -23,6 +24,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,6 +44,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     private SurfaceViewMain instance;
     private SurfaceView surfaceView;
     private OverlaidView overlaidView;
+    private OverlaidTextView overlaidTextView;
     private Camera camera;
     private Camera.Size previewSize;
     private SurfaceHolder surfaceHolder;
@@ -69,6 +72,8 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         surfaceView.getHolder().addCallback(this);
         overlaidView = (OverlaidView) findViewById(R.id.overlaid_view);
         overlaidView.setMainInstance(this);
+        overlaidTextView = (OverlaidTextView) findViewById(R.id.countdown_textview);
+        overlaidTextView.setMainInstance(this);
         flipCameraButton = (FloatingActionButton) findViewById(R.id.switch_camera_FAB);
         flipCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,6 +290,15 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
                         camera.takePicture(instance, null, instance);
                     }
                 }, 3000);
+                new CountDownTimer(3000, 1000) {
+                    public void onTick(long ms) {
+                        overlaidTextView.writeText(new Long(ms/1000).toString());
+                    }
+
+                    public void onFinish() {
+                        overlaidTextView.writeText("");
+                    }
+                }.start();
             }
             else {
                 Log.i(TAG, "short press; schedule take pic immediately");

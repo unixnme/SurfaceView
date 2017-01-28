@@ -13,10 +13,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 
-/**
- * Created by linuxnme on 1/27/17.
- */
-
 public class OverlaidView extends View {
     private static final String TAG = OverlaidView.class.getSimpleName();
     private static final float FOCUS_WIDTH = 100;
