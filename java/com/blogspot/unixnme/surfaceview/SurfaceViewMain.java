@@ -1,8 +1,10 @@
 package com.blogspot.unixnme.surfaceview;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -268,13 +271,15 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     }
 
     public void onPictureTaken(byte[] data, Camera camera) {
+        String filename = getFilename();
         try {
-            FileOutputStream fos = new FileOutputStream(getFilename());
+            FileOutputStream fos = new FileOutputStream(filename);
             fos.write(data);
             fos.close();
         } catch (IOException e) {
 
         }
+        addToGallery(filename);
         takePictureLock = false;
     }
 
@@ -288,6 +293,14 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         String filename = getExternalStoragePublicDirectory(DIRECTORY_PICTURES).getPath().toString() + "/" + timeStamp + ".jpg";
 
         return filename;
+    }
+
+    private void addToGallery(String filename) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(filename);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 
 }
