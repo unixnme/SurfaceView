@@ -24,7 +24,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -111,7 +110,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
 
         float angle = (float) (Math.atan2(-gravityY, gravityX) * 180 / Math.PI);
 
-        ViewCompat.animate(flipCameraButton).rotation(angle).withLayer().setDuration(0).start();
+        ViewCompat.animate(flipCameraButton).rotation(angle).setDuration(0).start();
         prevIconRotationAngle = angle;
     }
 
