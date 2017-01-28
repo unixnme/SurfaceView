@@ -14,4 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/overlaid_view" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/switch_camera_FAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

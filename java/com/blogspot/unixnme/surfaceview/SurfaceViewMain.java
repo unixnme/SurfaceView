@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -23,7 +24,7 @@ import java.util.List;
 import static android.os.Environment.DIRECTORY_PICTURES;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
-public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback, Camera.ShutterCallback {
+public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback, Camera.ShutterCallback {
 
     private static final String TAG = SurfaceViewMain.class.getSimpleName();
 
@@ -41,6 +42,7 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         instance = this;
         Window window = getWindow();
@@ -95,6 +97,9 @@ public class SurfaceViewMain extends Activity implements SurfaceHolder.Callback,
         Log.i(TAG, "surface changed");
         this.width = width;
         this.height = height;
+        if (previewSize.width * height != previewSize.height * width) {
+            Log.w(TAG, "preview aspect ratio differs from surfaceview");
+        }
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
