@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 public class OverlaidTextView extends View {
@@ -32,13 +31,18 @@ public class OverlaidTextView extends View {
         mainInstance = instance;
     }
 
-    public void writeText(String text) {
+    protected void writeText(String text) {
         textToWrite = text;
         invalidate();
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        canvas.drawText(textToWrite, getWidth()/2, getHeight()/2, paint);
+        float x = getWidth()/2;
+        float y = getHeight()/2;
+        //canvas.save();
+        canvas.rotate(mainInstance.gravityAngle, x, y);
+        canvas.drawText(textToWrite, x, y, paint);
+        //canvas.restore();
     }
 }

@@ -11,7 +11,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
@@ -57,7 +56,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     private int currentCameraFacing;
     private SensorManager sensorManager;
     private Sensor gSensor;
-    private float prevIconRotationAngle;
+    protected float gravityX, gravityY, gravityAngle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,13 +104,12 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     }
 
     public void onSensorChanged(SensorEvent event) {
-        float gravityX = event.values[0];
-        float gravityY = event.values[1];
+        gravityX = event.values[0];
+        gravityY = event.values[1];
 
-        float angle = (float) (Math.atan2(-gravityY, gravityX) * 180 / Math.PI);
+        gravityAngle = (float) (Math.atan2(-gravityY, gravityX) * 180 / Math.PI);
 
-        ViewCompat.animate(flipCameraButton).rotation(angle).setDuration(0).start();
-        prevIconRotationAngle = angle;
+        ViewCompat.animate(flipCameraButton).rotation(gravityAngle).setDuration(0).start();
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
@@ -208,7 +206,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
 
     // this function is straight from Android Developers Website at
     // https://developer.android.com/reference/android/hardware/Camera.html#setDisplayOrientation(int)
-    public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
+    protected static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(cameraId, info);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
@@ -230,7 +228,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         camera.setDisplayOrientation(result);
     }
 
-    public void setFocus(Rect focusRect) {
+    protected void setFocus(Rect focusRect) {
         if (camera == null || maxFocusAreas <= 0)
             return;
 
@@ -291,7 +289,9 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
                 }, 3000);
                 new CountDownTimer(3000, 1000) {
                     public void onTick(long ms) {
-                        overlaidTextView.writeText(new Long(ms/1000).toString());
+                        String text = String.valueOf(Math.round((float)ms/1000));
+                        Log.d(TAG, "countdown timer: " + ms);
+                        overlaidTextView.writeText(text);
                     }
 
                     public void onFinish() {
