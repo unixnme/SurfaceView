@@ -51,12 +51,12 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     private int cameraId;
     private int maxFocusAreas;
     private int maxMeteringAreas;
-    private boolean volumeLongPressed;
     private boolean takePictureLock;
     private int currentCameraFacing;
     private SensorManager sensorManager;
     private Sensor gSensor;
     protected float gravityX, gravityY, gravityAngle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +86,6 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
 
     protected void onResume() {
         super.onResume();
-        volumeLongPressed = false;
         takePictureLock = false;
         sensorManager.registerListener(this, gSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
@@ -252,7 +251,9 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            event.startTracking();
+            if (!takePictureLock) {
+                event.startTracking();
+            }
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -260,8 +261,34 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event){
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            volumeLongPressed = true;
+        if (camera != null && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+            if (takePictureLock)
+                // skip it if already take picture in the queue
+                return true;
+
+            takePictureLock = true;
+            Log.i(TAG, "long press");
+
+            // take picture in 3 secs
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i(TAG, "schedule take pic after long press");
+                    camera.takePicture(instance, null, instance);
+                }
+            }, 3000);
+            new CountDownTimer(3000, 1000) {
+                public void onTick(long ms) {
+                    String text = String.valueOf(Math.round((float)ms/1000));
+                    Log.d(TAG, "countdown timer: " + ms);
+                    overlaidTextView.writeText(text);
+                }
+
+                public void onFinish() {
+                    overlaidTextView.writeText("");
+                }
+            }.start();
             return true;
         }
         return onKeyLongPress(keyCode,event);
@@ -270,39 +297,14 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (camera != null && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+
             if (takePictureLock)
-                // take picture is already in queue; ignore any more take picture requests
                 return true;
 
             takePictureLock = true;
-            if (volumeLongPressed) {
-                Log.i(TAG, "long press");
-                volumeLongPressed = false;
-                // take picture in 3 secs
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.i(TAG, "schedule take pic after long press");
-                        camera.takePicture(instance, null, instance);
-                    }
-                }, 3000);
-                new CountDownTimer(3000, 1000) {
-                    public void onTick(long ms) {
-                        String text = String.valueOf(Math.round((float)ms/1000));
-                        Log.d(TAG, "countdown timer: " + ms);
-                        overlaidTextView.writeText(text);
-                    }
+            Log.i(TAG, "short press; schedule take pic immediately");
+            camera.takePicture(instance, null, this);
 
-                    public void onFinish() {
-                        overlaidTextView.writeText("");
-                    }
-                }.start();
-            }
-            else {
-                Log.i(TAG, "short press; schedule take pic immediately");
-                camera.takePicture(instance, null, this);
-            }
             return true;
         }
 
@@ -321,8 +323,6 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         addToGallery(filename);
         takePictureLock = false;
         camera.startPreview();
-
-
     }
 
     public void onShutter() {
