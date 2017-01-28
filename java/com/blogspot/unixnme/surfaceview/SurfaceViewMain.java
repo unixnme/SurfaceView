@@ -5,12 +5,14 @@ import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -33,12 +35,15 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     private OverlaidView overlaidView;
     private Camera camera;
     private Camera.Size previewSize;
+    private SurfaceHolder surfaceHolder;
+    private FloatingActionButton flipCameraButton;
     private int width, height;
     private int cameraId;
     private int maxFocusAreas;
     private int maxMeteringAreas;
     private boolean volumeLongPressed;
     private boolean takePictureLock;
+    private int currentCameraFacing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,14 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         surfaceView.getHolder().addCallback(this);
         overlaidView = (OverlaidView) findViewById(R.id.overlaid_view);
         overlaidView.setMainInstance(this);
+        flipCameraButton = (FloatingActionButton) findViewById(R.id.switch_camera_FAB);
+        flipCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "flip camera button clicked");
+                switchCameraFacingDirection();
+            }
+        });
     }
 
     protected void onResume() {
@@ -70,7 +83,9 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
 
     public void surfaceCreated(SurfaceHolder holder) {
         Log.i(TAG, "surface created");
-        cameraId = getCameraId();
+        surfaceHolder = holder;
+        cameraId = getCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
+        currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_BACK;
         camera = Camera.open(cameraId);
 
         if (camera != null) {
@@ -106,19 +121,56 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         Log.i(TAG, "surface destroyed");
     }
 
-    private int getCameraId() {
+    private int getCameraId(int facingDirection) throws IllegalArgumentException {
+        if (facingDirection != Camera.CameraInfo.CAMERA_FACING_BACK && facingDirection != Camera.CameraInfo.CAMERA_FACING_FRONT)
+            throw new IllegalArgumentException("facingDirection invalid for getCameraId");
         int cameraId = -1;
         int numberOfCameras = Camera.getNumberOfCameras();
         for (int i = 0; i < numberOfCameras; i++) {
             Camera.CameraInfo info = new Camera.CameraInfo();
             Camera.getCameraInfo(i, info);
-            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            if (info.facing == facingDirection) {
                 cameraId = i;
                 break;
             }
         }
 
         return cameraId;
+    }
+
+    private synchronized void switchCameraFacingDirection() {
+        if (camera == null)
+            return;
+
+        if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_BACK)
+            currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_FRONT;
+        else
+            currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_BACK;
+
+        camera.stopPreview();
+        camera.release();
+        int cameraId = getCameraId(currentCameraFacing);
+
+        camera = Camera.open(cameraId);
+
+        if (camera != null) {
+            Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+            Camera.getCameraInfo(cameraId, cameraInfo);
+            if (cameraInfo.canDisableShutterSound)
+                camera.enableShutterSound(false);
+
+            try {
+                setCameraDisplayOrientation(this, cameraId, camera);
+                camera.setPreviewDisplay(surfaceHolder);
+                Camera.Parameters parameters = camera.getParameters();
+                previewSize = parameters.getPreviewSize();
+                maxFocusAreas = parameters.getMaxNumFocusAreas();
+                maxMeteringAreas = parameters.getMaxNumMeteringAreas();
+                camera.startPreview();
+            } catch (IOException ie) {
+                Log.e(TAG, "setPreviewDisplay fails");
+            }
+        }
     }
 
     // this function is straight from Android Developers Website at
