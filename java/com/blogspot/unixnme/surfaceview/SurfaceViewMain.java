@@ -1,13 +1,19 @@
 package com.blogspot.unixnme.surfaceview;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,7 +35,7 @@ import java.util.List;
 import static android.os.Environment.DIRECTORY_PICTURES;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
-public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback, Camera.ShutterCallback {
+public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback, Camera.ShutterCallback, SensorEventListener {
 
     private static final String TAG = SurfaceViewMain.class.getSimpleName();
 
@@ -47,6 +53,9 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     private boolean volumeLongPressed;
     private boolean takePictureLock;
     private int currentCameraFacing;
+    private SensorManager sensorManager;
+    private Sensor gSensor;
+    private float prevIconRotationAngle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +77,15 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
                 switchCameraFacingDirection();
             }
         });
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
     }
 
     protected void onResume() {
         super.onResume();
         volumeLongPressed = false;
         takePictureLock = false;
+        sensorManager.registerListener(this, gSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     protected void onPause() {
@@ -82,6 +94,20 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
             camera.stopPreview();
             camera.release();
         }
+        sensorManager.unregisterListener(this);
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    public void onSensorChanged(SensorEvent event) {
+        float gravityX = event.values[0];
+        float gravityY = event.values[1];
+
+        float angle = (float) (Math.atan2(-gravityY, gravityX) * 180 / Math.PI);
+
+        ViewCompat.animate(flipCameraButton).rotation(angle).withLayer().setDuration(0).start();
+        prevIconRotationAngle = angle;
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
@@ -282,6 +308,8 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         addToGallery(filename);
         takePictureLock = false;
         camera.startPreview();
+
+
     }
 
     public void onShutter() {
