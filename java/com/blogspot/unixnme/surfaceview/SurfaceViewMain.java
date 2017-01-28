@@ -281,6 +281,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         }
         addToGallery(filename);
         takePictureLock = false;
+        camera.startPreview();
     }
 
     public void onShutter() {
