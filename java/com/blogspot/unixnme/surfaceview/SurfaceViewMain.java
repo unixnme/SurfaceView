@@ -1,6 +1,5 @@
 package com.blogspot.unixnme.surfaceview;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -20,7 +19,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -101,7 +99,13 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         float padT = pxHeight * 0.5f - 44;
         frameLayout.setPadding((int)padL, (int)padT, 0, 0);
         captureButton = (ImageButton) findViewById(R.id.capture_button);
-        captureButton.setRotation(-90);
+        captureButton.setRotation(270);
+        captureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePictureWithCorrectOrientation(instance, null, instance);
+            }
+        });
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
     }
@@ -255,7 +259,10 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         return super.onKeyDown(keyCode, event);
     }
 
-    private void takePictureWithCorrectOrientation(Camera.ShutterCallback shutter, Camera.PictureCallback raw, Camera.PictureCallback jpeg) {
+    private synchronized void takePictureWithCorrectOrientation(Camera.ShutterCallback shutter, Camera.PictureCallback raw, Camera.PictureCallback jpeg) {
+        if (camera == null)
+            return;
+
         int angle = 0;
         if (-180 <= gravityAngle && gravityAngle < -135)
             angle = 180;
