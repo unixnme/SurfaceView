@@ -19,10 +19,10 @@ public class OverlaidTextView extends View {
         super(context, attributeSet);
         instance = this;
         paint = new Paint();
-        paint.setColor(Color.GRAY);
+        paint.setColor(Color.WHITE);
         paint.setStrokeWidth(3);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setTextSize(100);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setTextSize(300);
         paint.setTextAlign(Paint.Align.CENTER);
         textToWrite = "";
     }
