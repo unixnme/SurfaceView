@@ -22,7 +22,6 @@ public class OverlaidTextView extends View {
         paint.setColor(Color.WHITE);
         paint.setStrokeWidth(3);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setTextSize(300);
         paint.setTextAlign(Paint.Align.CENTER);
         textToWrite = "";
     }
@@ -41,6 +40,12 @@ public class OverlaidTextView extends View {
         float x = getWidth()/2;
         float y = getHeight()/2;
         canvas.rotate(mainInstance.gravityAngle, x, y);
+        int textSize;
+        if (textToWrite.length() > 1)
+            textSize = 100;
+        else
+            textSize = 300;
+        paint.setTextSize(textSize);
         canvas.drawText(textToWrite, x, y, paint);
     }
 }

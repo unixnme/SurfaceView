@@ -132,6 +132,8 @@ public abstract class CountDownTimer {
 
                 if (millisLeft <= 0) {
                     onFinish();
+                } else if (millisLeft <= mCountdownInterval / 2) {
+                    sendMessageDelayed(obtainMessage(MSG), millisLeft);
                 } else {
                     long lastTickStart = SystemClock.elapsedRealtime();
                     onTick(millisLeft);

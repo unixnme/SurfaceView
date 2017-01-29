@@ -304,9 +304,17 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
                 return true;
 
             takePictureLock = true;
-            Log.i(TAG, "short press; schedule take pic immediately");
-            takePictureWithCorrectOrientation(instance, null, instance);
-
+            Log.i(TAG, "short press; schedule take pic in 0.5sec");
+            overlaidTextView.writeText("Cheese~");
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i(TAG, "schedule take pic after short press release");
+                    takePictureWithCorrectOrientation(instance, null, instance);
+                    overlaidTextView.writeText("");
+                }
+            }, 500);
             return true;
         }
 
