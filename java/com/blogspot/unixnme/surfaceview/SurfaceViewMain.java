@@ -3,6 +3,7 @@ package com.blogspot.unixnme.surfaceview;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Sensor;
@@ -15,7 +16,9 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -23,6 +26,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,7 +52,10 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     private Camera.Size previewSize;
     private SurfaceHolder surfaceHolder;
     private FloatingActionButton flipCameraButton;
-    private int width, height;
+    private FrameLayout frameLayout;
+    private ImageButton captureButton;
+    private int surfaceWidth, surfaceHeight, pxWidth, pxHeight;
+    private float dpWidth, dpHeight;
     private int cameraId;
     private int maxFocusAreas;
     private int maxMeteringAreas;
@@ -66,6 +74,14 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.surface_view_main);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        pxWidth = size.x;
+        pxHeight = size.y;
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         surfaceView.getHolder().addCallback(this);
         overlaidView = (OverlaidView) findViewById(R.id.overlaid_view);
@@ -80,6 +96,12 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
                 switchCameraFacingDirection();
             }
         });
+        frameLayout = (FrameLayout) findViewById(R.id.image_button_frame_layout);
+        float padL = pxWidth * 0.9f - 25;
+        float padT = pxHeight * 0.5f - 44;
+        frameLayout.setPadding((int)padL, (int)padT, 0, 0);
+        captureButton = (ImageButton) findViewById(R.id.capture_button);
+        captureButton.setRotation(-90);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
     }
@@ -139,8 +161,8 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.i(TAG, "surface changed");
-        this.width = width;
-        this.height = height;
+        this.surfaceWidth = width;
+        this.surfaceHeight = height;
         if (previewSize.width * height != previewSize.height * width) {
             Log.w(TAG, "preview aspect ratio differs from surfaceview");
         }
