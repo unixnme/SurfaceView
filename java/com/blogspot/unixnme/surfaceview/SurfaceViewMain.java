@@ -259,6 +259,34 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         return super.onKeyDown(keyCode, event);
     }
 
+    private void takePictureWithCorrectOrientation(Camera.ShutterCallback shutter, Camera.PictureCallback raw, Camera.PictureCallback jpeg) {
+        int angle = 0;
+        if (-180 <= gravityAngle && gravityAngle < -135)
+            angle = 180;
+        else if (-135 <= gravityAngle && gravityAngle < -45) {
+            if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_BACK)
+                angle = 90;
+            else
+                angle = 270;
+        }
+        else if (-45 <= gravityAngle && gravityAngle < 45)
+            angle = 0;
+        else if (45 <= gravityAngle && gravityAngle < 135) {
+            if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_BACK)
+                angle = 270;
+            else
+                angle = 90;
+        }
+        else if (135 <= gravityAngle && gravityAngle <= 180)
+            angle = 180;
+
+        Camera.Parameters parameters = camera.getParameters();
+        parameters.setRotation(angle);
+        camera.setParameters(parameters);
+        camera.takePicture(shutter, raw, jpeg);
+    }
+
+
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event){
         if (camera != null && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
@@ -275,7 +303,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
                 @Override
                 public void run() {
                     Log.i(TAG, "schedule take pic after long press");
-                    camera.takePicture(instance, null, instance);
+                    takePictureWithCorrectOrientation(instance, null, instance);
                 }
             }, 3000);
             new CountDownTimer(3000, 1000) {
@@ -303,7 +331,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
 
             takePictureLock = true;
             Log.i(TAG, "short press; schedule take pic immediately");
-            camera.takePicture(instance, null, this);
+            takePictureWithCorrectOrientation(instance, null, instance);
 
             return true;
         }
