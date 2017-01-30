@@ -90,7 +90,8 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "flip camera button clicked");
-                switchCameraFacingDirection();
+                if (!takePictureLock)
+                    switchCameraFacingDirection();
             }
         });
         frameLayout = (FrameLayout) findViewById(R.id.image_button_frame_layout);
@@ -98,7 +99,9 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePictureWithCorrectOrientation(instance, null, instance);
+                Log.i(TAG, "capture button clicked");
+                if (!takePictureLock)
+                    takePictureWithCorrectOrientation(instance, null, instance);
             }
         });
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -260,8 +263,6 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     }
 
     private synchronized void takePictureWithCorrectOrientation(Camera.ShutterCallback shutter, Camera.PictureCallback raw, Camera.PictureCallback jpeg) {
-        if (camera == null)
-            return;
 
         int angle = 0;
         if (-180 <= gravityAngle && gravityAngle < -135)
