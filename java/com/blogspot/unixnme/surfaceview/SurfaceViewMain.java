@@ -60,7 +60,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     private int currentCameraFacing;
     private SensorManager sensorManager;
     private Sensor gSensor;
-    protected float gravityX, gravityY, gravityAngle;
+    float gravityX, gravityY, gravityAngle;
 
 
     @Override
@@ -230,7 +230,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         }
     }
 
-    protected void setFocus(Rect focusRect) {
+    void setFocus(Rect focusRect) {
         if (camera == null || maxFocusAreas <= 0)
             return;
 

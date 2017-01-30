@@ -26,11 +26,11 @@ public class OverlaidTextView extends View {
         textToWrite = "";
     }
 
-    public void setMainInstance(SurfaceViewMain instance) {
+    void setMainInstance(SurfaceViewMain instance) {
         mainInstance = instance;
     }
 
-    protected void writeText(String text) {
+    void writeText(String text) {
         textToWrite = text;
         invalidate();
     }

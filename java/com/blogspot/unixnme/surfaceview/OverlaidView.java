@@ -46,7 +46,7 @@ public class OverlaidView extends View {
         };
     }
 
-    public void setMainInstance(SurfaceViewMain instance) {
+    void setMainInstance(SurfaceViewMain instance) {
         mainInstance = instance;
     }
 
@@ -88,7 +88,7 @@ public class OverlaidView extends View {
     }
 
     // animate take picture animation
-    public void animateTakePicture() {
+    void animateTakePicture() {
         final long animationDuration = 100;
         final float animationAlpha = 0.5f;
         AlphaAnimation fadeIn = new AlphaAnimation(0, animationAlpha);
