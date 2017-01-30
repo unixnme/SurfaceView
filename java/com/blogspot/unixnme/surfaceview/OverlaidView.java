@@ -22,6 +22,8 @@ public class OverlaidView extends View {
     private Paint paint;
     private float x1,x2,y1,y2;
     private SurfaceViewMain mainInstance;
+    private CountDownTimer countDownTimer;
+    private boolean drawRect;
 
     public OverlaidView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -30,6 +32,18 @@ public class OverlaidView extends View {
         paint.setColor(Color.GREEN);
         paint.setStrokeWidth(3);
         paint.setStyle(Paint.Style.STROKE);
+        drawRect = false;
+        countDownTimer = new CountDownTimer(1000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // nothing to do
+            }
+
+            @Override
+            public void onFinish() {
+                invalidate();
+            }
+        };
     }
 
     public void setMainInstance(SurfaceViewMain instance) {
@@ -41,6 +55,7 @@ public class OverlaidView extends View {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             float x = event.getX();
             float y = event.getY();
+            drawRect = true;
             invalidate();
 
             float width = getWidth();
@@ -63,8 +78,13 @@ public class OverlaidView extends View {
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
-        canvas.drawRect(new Rect((int)x1, (int)y1, (int)x2, (int)y2), paint);
+    public synchronized void onDraw(Canvas canvas) {
+        if (drawRect) {
+            canvas.drawRect(new Rect((int) x1, (int) y1, (int) x2, (int) y2), paint);
+            countDownTimer.cancel();
+            countDownTimer.start();
+        }
+        drawRect = false;
     }
 
     // animate take picture animation
