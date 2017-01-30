@@ -24,6 +24,7 @@ public class OverlaidView extends View {
     private SurfaceViewMain mainInstance;
     private CountDownTimer countDownTimer;
     private boolean drawRect;
+    boolean autoFocusSupported;
 
     public OverlaidView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -79,7 +80,7 @@ public class OverlaidView extends View {
 
     @Override
     public synchronized void onDraw(Canvas canvas) {
-        if (drawRect) {
+        if (drawRect && autoFocusSupported) {
             canvas.drawRect(new Rect((int) x1, (int) y1, (int) x2, (int) y2), paint);
             countDownTimer.cancel();
             countDownTimer.start();

@@ -40,6 +40,10 @@ import static android.os.Environment.getExternalStoragePublicDirectory;
 public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback, Camera.ShutterCallback, SensorEventListener {
 
     private static final String TAG = SurfaceViewMain.class.getSimpleName();
+    private static final int FOCUS_AUTO = 0;
+    private static final int FOCUS_CONTINUOUS_VIDEO = 1;
+    private static final int FOCUS_CONTINUOUS_PICTURE = 2;
+    private static final int NUM_FOCUS_MODES_SUPPORTED = 3;
 
     private SurfaceViewMain instance;
     private SurfaceView surfaceView;
@@ -159,11 +163,35 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
             previewSize = parameters.getPreviewSize();
             maxFocusAreas = parameters.getMaxNumFocusAreas();
             maxMeteringAreas = parameters.getMaxNumMeteringAreas();
+            List<Boolean> supportedFocusModes = getSupportedFocusModes(parameters);
+            if (supportedFocusModes.get(FOCUS_AUTO)) {
+                overlaidView.autoFocusSupported = true;
+            } else {
+                overlaidView.autoFocusSupported = false;
+            }
             camera.startPreview();
         } catch (IOException ie) {
             Log.e(TAG, "setPreviewDisplay fails");
         }
+    }
 
+    private List<Boolean> getSupportedFocusModes(Camera.Parameters parameters) {
+        List<Boolean> result = new ArrayList<>();
+        for (int i=0; i<NUM_FOCUS_MODES_SUPPORTED; i++)
+            result.add(false);
+
+        if (parameters == null)
+            return result;
+
+        for (String focusMode : parameters.getSupportedFocusModes()) {
+            if (focusMode.equals(Camera.Parameters.FOCUS_MODE_AUTO))
+                result.set(FOCUS_AUTO, true);
+            else if (focusMode.equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO))
+                result.set(FOCUS_CONTINUOUS_VIDEO, true);
+            else if (focusMode.equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
+                result.set(FOCUS_CONTINUOUS_PICTURE, true);
+        }
+        return result;
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -223,6 +251,12 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
                 previewSize = parameters.getPreviewSize();
                 maxFocusAreas = parameters.getMaxNumFocusAreas();
                 maxMeteringAreas = parameters.getMaxNumMeteringAreas();
+                List<Boolean> supportedFocusModes = getSupportedFocusModes(parameters);
+                if (supportedFocusModes.get(FOCUS_AUTO)) {
+                    overlaidView.autoFocusSupported = true;
+                } else {
+                    overlaidView.autoFocusSupported = false;
+                }
                 camera.startPreview();
             } catch (IOException ie) {
                 Log.e(TAG, "setPreviewDisplay fails");
