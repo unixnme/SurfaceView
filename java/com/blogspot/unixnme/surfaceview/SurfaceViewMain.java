@@ -116,6 +116,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         if (camera != null) {
             camera.stopPreview();
             camera.release();
+            camera = null;
         }
         sensorManager.unregisterListener(this);
     }
@@ -139,23 +140,27 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_BACK;
         camera = Camera.open(cameraId);
 
-        if (camera != null) {
-            Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-            Camera.getCameraInfo(cameraId, cameraInfo);
-            if (cameraInfo.canDisableShutterSound)
-                camera.enableShutterSound(false);
-
-            try {
-                camera.setPreviewDisplay(holder);
-                Camera.Parameters parameters = camera.getParameters();
-                previewSize = parameters.getPreviewSize();
-                maxFocusAreas = parameters.getMaxNumFocusAreas();
-                maxMeteringAreas = parameters.getMaxNumMeteringAreas();
-                camera.startPreview();
-            } catch (IOException ie) {
-                Log.e(TAG, "setPreviewDisplay fails");
-            }
+        if (camera == null) {
+            Log.e(TAG, "Camera.open(" + cameraId + ") failed");
+            return;
         }
+
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, cameraInfo);
+        if (cameraInfo.canDisableShutterSound)
+            camera.enableShutterSound(false);
+
+        try {
+            camera.setPreviewDisplay(holder);
+            Camera.Parameters parameters = camera.getParameters();
+            previewSize = parameters.getPreviewSize();
+            maxFocusAreas = parameters.getMaxNumFocusAreas();
+            maxMeteringAreas = parameters.getMaxNumMeteringAreas();
+            camera.startPreview();
+        } catch (IOException ie) {
+            Log.e(TAG, "setPreviewDisplay fails");
+        }
+
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -238,7 +243,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     }
 
     public void onAutoFocus(boolean success, Camera camera) {
-        if (success)
+        if (success && camera != null)
             camera.cancelAutoFocus();
     }
 
@@ -277,6 +282,9 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         }
         else if (135 <= gravityAngle && gravityAngle <= 180)
             angle = 180;
+
+        if (camera == null)
+            return;
 
         Camera.Parameters parameters = camera.getParameters();
         parameters.setRotation(angle);
