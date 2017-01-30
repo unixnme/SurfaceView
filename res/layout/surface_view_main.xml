@@ -29,6 +29,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        app:backgroundTint="@color/white"
         android:src="@drawable/flip_camera" />
 
     <LinearLayout
@@ -54,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="0dp"
-                app:backgroundTint="@color/colorAccent"
+                app:backgroundTint="@color/white"
                 android:layout_margin="0dp"
                 android:id="@+id/capture_button" />
 
