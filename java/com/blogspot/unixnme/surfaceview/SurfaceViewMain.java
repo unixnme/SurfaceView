@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,7 +50,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
     private SurfaceHolder surfaceHolder;
     private FloatingActionButton flipCameraButton;
     private FrameLayout frameLayout;
-    private ImageButton captureButton;
+    private FloatingActionButton captureButton;
     private int surfaceWidth, surfaceHeight, pxWidth, pxHeight;
     private float dpWidth, dpHeight;
     private int cameraId;
@@ -95,11 +94,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
             }
         });
         frameLayout = (FrameLayout) findViewById(R.id.image_button_frame_layout);
-        float padL = pxWidth * 0.9f - 25;
-        float padT = pxHeight * 0.5f - 44;
-        frameLayout.setPadding((int)padL, (int)padT, 0, 0);
-        captureButton = (ImageButton) findViewById(R.id.capture_button);
-        captureButton.setRotation(270);
+        captureButton = (FloatingActionButton) findViewById(R.id.capture_button);
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

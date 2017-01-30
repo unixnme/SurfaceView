@@ -31,19 +31,35 @@
         android:layout_marginBottom="10dp"
         android:src="@drawable/flip_camera" />
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/image_button_frame_layout">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-        <ImageButton
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="0dp"
-            android:layout_margin="0dp"
-            android:src="@drawable/capture"
-            android:id="@+id/capture_button"/>
+            android:layout_weight="40">
 
-    </FrameLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/image_button_frame_layout"
+            android:layout_gravity="center">
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="0dp"
+                app:backgroundTint="@color/colorAccent"
+                android:layout_margin="0dp"
+                android:id="@+id/capture_button" />
+
+        </FrameLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
