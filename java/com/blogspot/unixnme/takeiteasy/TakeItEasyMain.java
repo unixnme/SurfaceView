@@ -75,7 +75,6 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private SharedPreferences.Editor editor;
     private CheckBox demoCheckBox;
     private Button demoCloseButton;
-    private LinearLayout demoLinearLayout;
     private DemoView demoView;
     private View.OnClickListener demoOnClickListener;
 
@@ -108,23 +107,22 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         demoView = (DemoView) findViewById(R.id.demo_layout);
-        demoLinearLayout = (LinearLayout) findViewById(R.id.demo_center_linear_layout);
         demoCheckBox = (CheckBox) findViewById(R.id.checkBox);
         demoCloseButton = (Button) findViewById(R.id.close_button);
         demoOnClickListener = new View.OnClickListener() {
             public void onClick(View v) {
                 if (demoCheckBox.isChecked())
                     setDemoPref(false);
-                demoLinearLayout.setVisibility(View.GONE);
+                demoView.setVisibility(View.GONE);
             }
         };
         demoCloseButton.setOnClickListener(demoOnClickListener);
         if (sharedPref.getBoolean(DEMO, true)) {
-            demoLinearLayout.setVisibility(View.VISIBLE);
+            demoView.setVisibility(View.VISIBLE);
 //            Intent intent = new Intent(this, DemoView.class);
 //            startActivity(intent);
         } else {
-            demoLinearLayout.setVisibility(View.GONE);
+            demoView.setVisibility(View.GONE);
         }
     }
 

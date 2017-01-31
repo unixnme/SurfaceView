@@ -11,27 +11,28 @@
         android:layout_height="match_parent"
         android:id="@+id/surface_view" />
 
+
     <com.blogspot.unixnme.takeiteasy.OverlaidView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/overlaid_view" />
+
 
     <com.blogspot.unixnme.takeiteasy.OverlaidTextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/countdown_textview"/>
 
-    <com.blogspot.unixnme.takeiteasy.DemoView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:id="@+id/demo_layout" >
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="4">
-
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/switch_camera_FAB"
                 android:layout_width="wrap_content"
@@ -39,64 +40,105 @@
                 app:backgroundTint="@color/white"
                 android:layout_margin="10dp"
                 android:src="@drawable/flip_camera" />
-
         </RelativeLayout>
 
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:id="@+id/demo_center_linear_layout">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/instructions"
-                android:textSize="15sp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:rotation="-90"
-                android:textColor="@color/white" />
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:rotation="-90"
-                android:text="@string/check_box_text"
-                android:textColor="@color/white"
-                android:buttonTint="@color/white"
-                android:id="@+id/checkBox"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:rotation="-90"
-                android:id="@+id/close_button"
-                android:text="@string/close_button"/>
-
-        </LinearLayout>
+            android:layout_weight="1">
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center|right"
             android:layout_weight="4">
-
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:backgroundTint="@color/white"
                 android:layout_margin="10dp"
                 android:id="@+id/capture_button" />
+        </RelativeLayout>
 
+    </LinearLayout>
+
+
+    <com.blogspot.unixnme.takeiteasy.DemoView
+        style="@style/Transparent"
+        android:background="#aa000000"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:id="@+id/demo_layout"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4">
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="1" >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructions"
+                    android:textSize="15sp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:rotation="-90"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1">
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:rotation="-90"
+                    android:text="@string/check_box_text"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"
+                    android:id="@+id/checkBox"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:rotation="-90"
+                    android:id="@+id/close_button"
+                    android:text="@string/close_button"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4">
         </RelativeLayout>
 
     </com.blogspot.unixnme.takeiteasy.DemoView>
