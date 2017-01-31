@@ -6,6 +6,7 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="colorAccent">#FFF</item>
     </style>
 
     <style name="Transparent" parent="@android:style/Theme.NoTitleBar">

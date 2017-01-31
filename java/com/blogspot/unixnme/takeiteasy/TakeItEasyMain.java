@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -25,7 +26,10 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -56,6 +60,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private SurfaceHolder surfaceHolder;
     private FloatingActionButton flipCameraButton;
     private FrameLayout frameLayout;
+    private DemoView demoLinearLayout;
     private FloatingActionButton captureButton;
     private int surfaceWidth, surfaceHeight, pxWidth, pxHeight;
     private float dpWidth, dpHeight;
@@ -69,6 +74,9 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     float gravityX, gravityY, gravityAngle;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
+    private CheckBox demoCheckBox;
+    private Button demoCloseButton;
+    private View.OnClickListener demoOnClickListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -98,9 +106,23 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         editor = sharedPref.edit();
+        demoLinearLayout = (DemoView) findViewById(R.id.demo_layout);
+        demoCheckBox = (CheckBox) findViewById(R.id.checkBox);
+        demoCloseButton = (Button) findViewById(R.id.close_button);
+        demoOnClickListener = new View.OnClickListener() {
+            public void onClick(View v) {
+                if (demoCheckBox.isChecked())
+                    setDemoPref(false);
+                demoLinearLayout.setVisibility(View.GONE);
+            }
+        };
+        demoCloseButton.setOnClickListener(demoOnClickListener);
         if (sharedPref.getBoolean(DEMO, true)) {
-            Intent intent = new Intent(this, DemoActivity.class);
-            startActivity(intent);
+            demoLinearLayout.setVisibility(View.VISIBLE);
+//            Intent intent = new Intent(this, DemoView.class);
+//            startActivity(intent);
+        } else {
+            demoLinearLayout.setVisibility(View.GONE);
         }
     }
 
