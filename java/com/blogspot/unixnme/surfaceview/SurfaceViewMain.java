@@ -90,16 +90,19 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         overlaidTextView = (OverlaidTextView) findViewById(R.id.countdown_textview);
         overlaidTextView.setMainInstance(this);
         flipCameraButton = (FloatingActionButton) findViewById(R.id.switch_camera_FAB);
-        flipCameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "flip camera button clicked");
-                if (!takePictureLock)
-                    switchCameraFacingDirection();
-            }
-        });
         frameLayout = (FrameLayout) findViewById(R.id.image_button_frame_layout);
         captureButton = (FloatingActionButton) findViewById(R.id.capture_button);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+
+        Intent intent = new Intent(this, DemoActivity.class);
+        startActivity(intent);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        takePictureLock = false;
+        sensorManager.registerListener(this, gSensor, SensorManager.SENSOR_DELAY_NORMAL);
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,14 +111,14 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
                     takePictureWithCorrectOrientation(instance, null, instance);
             }
         });
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-    }
-
-    protected void onResume() {
-        super.onResume();
-        takePictureLock = false;
-        sensorManager.registerListener(this, gSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        flipCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "flip camera button clicked");
+                if (!takePictureLock)
+                    switchCameraFacingDirection();
+            }
+        });
     }
 
     protected void onPause() {
