@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.blogspot.unixnme.surfaceview">
+    package="com.blogspot.unixnme.takeiteasy">
 
     <application
         android:allowBackup="true"
@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.FullScreen">
 
-        <activity android:name=".SurfaceViewMain"
+        <activity android:name="com.blogspot.unixnme.takeiteasy.TakeItEasyMain"
             android:screenOrientation="landscape">
 
             <intent-filter>
@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DemoActivity"
+        <activity android:name="com.blogspot.unixnme.takeiteasy.DemoActivity"
             android:screenOrientation="portrait">
 
         </activity>

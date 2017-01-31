@@ -1,4 +1,4 @@
-package com.blogspot.unixnme.surfaceview;
+package com.blogspot.unixnme.takeiteasy;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

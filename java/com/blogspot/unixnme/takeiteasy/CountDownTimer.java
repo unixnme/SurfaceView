@@ -1,4 +1,4 @@
-package com.blogspot.unixnme.surfaceview;
+package com.blogspot.unixnme.takeiteasy;
 
 /*
  * Copyright (C) 2008 The Android Open Source Project

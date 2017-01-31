@@ -1,4 +1,4 @@
-package com.blogspot.unixnme.surfaceview;
+package com.blogspot.unixnme.takeiteasy;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -21,7 +21,7 @@ public class OverlaidView extends View {
     private OverlaidView instance;
     private Paint paint;
     private float x1,x2,y1,y2;
-    private SurfaceViewMain mainInstance;
+    private TakeItEasyMain mainInstance;
     private CountDownTimer countDownTimer;
     private boolean drawRect;
     boolean autoFocusSupported;
@@ -47,7 +47,7 @@ public class OverlaidView extends View {
         };
     }
 
-    void setMainInstance(SurfaceViewMain instance) {
+    void setMainInstance(TakeItEasyMain instance) {
         mainInstance = instance;
     }
 

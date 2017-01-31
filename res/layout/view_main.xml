@@ -4,19 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.blogspot.unixnme.surfaceview.SurfaceViewMain">
+    tools:context="com.blogspot.unixnme.takeiteasy.TakeItEasyMain">
 
     <SurfaceView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/surface_view" />
 
-    <com.blogspot.unixnme.surfaceview.OverlaidView
+    <com.blogspot.unixnme.takeiteasy.OverlaidView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/overlaid_view" />
 
-    <com.blogspot.unixnme.surfaceview.OverlaidTextView
+    <com.blogspot.unixnme.takeiteasy.OverlaidTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/countdown_textview"/>

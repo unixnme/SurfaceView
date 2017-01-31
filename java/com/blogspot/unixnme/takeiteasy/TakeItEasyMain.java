@@ -1,4 +1,4 @@
-package com.blogspot.unixnme.surfaceview;
+package com.blogspot.unixnme.takeiteasy;
 
 import android.content.Context;
 import android.content.Intent;
@@ -37,15 +37,15 @@ import java.util.List;
 import static android.os.Environment.DIRECTORY_PICTURES;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
-public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback, Camera.ShutterCallback, SensorEventListener {
+public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback, Camera.ShutterCallback, SensorEventListener {
 
-    private static final String TAG = SurfaceViewMain.class.getSimpleName();
+    private static final String TAG = TakeItEasyMain.class.getSimpleName();
     private static final int FOCUS_AUTO = 0;
     private static final int FOCUS_CONTINUOUS_VIDEO = 1;
     private static final int FOCUS_CONTINUOUS_PICTURE = 2;
     private static final int NUM_FOCUS_MODES_SUPPORTED = 3;
 
-    private SurfaceViewMain instance;
+    private TakeItEasyMain instance;
     private SurfaceView surfaceView;
     private OverlaidView overlaidView;
     private OverlaidTextView overlaidTextView;
@@ -74,7 +74,7 @@ public class SurfaceViewMain extends AppCompatActivity implements SurfaceHolder.
         instance = this;
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.surface_view_main);
+        setContentView(R.layout.view_main);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);

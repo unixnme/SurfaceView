@@ -1,4 +1,4 @@
-package com.blogspot.unixnme.surfaceview;
+package com.blogspot.unixnme.takeiteasy;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,7 +12,7 @@ public class OverlaidTextView extends View {
 
     private OverlaidTextView instance;
     private Paint paint;
-    private SurfaceViewMain mainInstance;
+    private TakeItEasyMain mainInstance;
     private String textToWrite;
 
     public OverlaidTextView(Context context, AttributeSet attributeSet) {
@@ -26,7 +26,7 @@ public class OverlaidTextView extends View {
         textToWrite = "";
     }
 
-    void setMainInstance(SurfaceViewMain instance) {
+    void setMainInstance(TakeItEasyMain instance) {
         mainInstance = instance;
     }
 
