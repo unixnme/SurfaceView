@@ -4,7 +4,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
     defaultConfig {
-        applicationId "com.blogspot.unixnme.surfaceview"
+        applicationId "com.blogspot.unixnme.takeiteasy"
         minSdkVersion 17
         targetSdkVersion 22
     }

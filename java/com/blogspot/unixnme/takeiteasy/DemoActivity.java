@@ -12,11 +12,7 @@ public class DemoActivity extends AppCompatActivity {
     DemoActivity instance;
     private CheckBox checkBox;
     private Button closeButton;
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            finish();
-        }
-    };
+    private View.OnClickListener onClickListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -25,7 +21,13 @@ public class DemoActivity extends AppCompatActivity {
         setContentView(R.layout.demo_activity);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
         closeButton = (Button) findViewById(R.id.close_button);
+        onClickListener = new View.OnClickListener() {
+            public void onClick(View v) {
+                if (checkBox.isChecked())
+                    TakeItEasyMain.getInstance().setDemoPref(false);
+                finish();
+            }
+        };
         closeButton.setOnClickListener(onClickListener);
     }
-
 }

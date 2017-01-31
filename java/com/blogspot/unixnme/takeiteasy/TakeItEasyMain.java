@@ -2,6 +2,7 @@ package com.blogspot.unixnme.takeiteasy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -44,8 +45,9 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private static final int FOCUS_CONTINUOUS_VIDEO = 1;
     private static final int FOCUS_CONTINUOUS_PICTURE = 2;
     private static final int NUM_FOCUS_MODES_SUPPORTED = 3;
+    private static final String DEMO = "DEMO";
 
-    private TakeItEasyMain instance;
+    private static TakeItEasyMain instance;
     private SurfaceView surfaceView;
     private OverlaidView overlaidView;
     private OverlaidTextView overlaidTextView;
@@ -65,9 +67,9 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private SensorManager sensorManager;
     private Sensor gSensor;
     float gravityX, gravityY, gravityAngle;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
@@ -94,9 +96,12 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         captureButton = (FloatingActionButton) findViewById(R.id.capture_button);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-
-        Intent intent = new Intent(this, DemoActivity.class);
-        startActivity(intent);
+        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+        if (sharedPref.getBoolean(DEMO, true)) {
+            Intent intent = new Intent(this, DemoActivity.class);
+            startActivity(intent);
+        }
     }
 
     protected void onResume() {
@@ -129,6 +134,18 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
             camera = null;
         }
         sensorManager.unregisterListener(this);
+    }
+
+    static TakeItEasyMain getInstance() {
+        return instance;
+    }
+
+    void setDemoPref(boolean val) {
+        if (editor == null)
+            return;
+
+        editor.putBoolean(DEMO, val);
+        editor.commit();
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
