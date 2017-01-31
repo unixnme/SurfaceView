@@ -60,7 +60,6 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private SurfaceHolder surfaceHolder;
     private FloatingActionButton flipCameraButton;
     private FrameLayout frameLayout;
-    private DemoView demoLinearLayout;
     private FloatingActionButton captureButton;
     private int surfaceWidth, surfaceHeight, pxWidth, pxHeight;
     private float dpWidth, dpHeight;
@@ -76,6 +75,8 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private SharedPreferences.Editor editor;
     private CheckBox demoCheckBox;
     private Button demoCloseButton;
+    private LinearLayout demoLinearLayout;
+    private DemoView demoView;
     private View.OnClickListener demoOnClickListener;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         instance = this;
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.view_main);
+        setContentView(R.layout.main_activity_layout);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -106,7 +107,8 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         editor = sharedPref.edit();
-        demoLinearLayout = (DemoView) findViewById(R.id.demo_layout);
+        demoView = (DemoView) findViewById(R.id.demo_layout);
+        demoLinearLayout = (LinearLayout) findViewById(R.id.demo_center_linear_layout);
         demoCheckBox = (CheckBox) findViewById(R.id.checkBox);
         demoCloseButton = (Button) findViewById(R.id.close_button);
         demoOnClickListener = new View.OnClickListener() {

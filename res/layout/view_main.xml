@@ -67,7 +67,7 @@
     <com.blogspot.unixnme.takeiteasy.DemoView
         style="@style/Transparent"
         android:background="#aa000000"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/demo_layout">
@@ -75,45 +75,40 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="@string/instructions"
             android:textSize="15sp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textColor="@color/white"
-            android:layout_weight="1"/>
+            android:rotation="-90"
+            android:textColor="@color/white" />
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <CheckBox
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_gravity="center"
-            android:gravity="center">
+            android:gravity="center"
+            android:rotation="-90"
+            android:text="@string/check_box_text"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:id="@+id/checkBox"/>
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:buttonTint="@color/white"
-                android:id="@+id/checkBox"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:text="@string/check_box_text"/>
-
-        </LinearLayout>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_gravity="center"
+            android:rotation="-90"
             android:id="@+id/close_button"
             android:text="@string/close_button"/>
+
+        <View
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
     </com.blogspot.unixnme.takeiteasy.DemoView>
