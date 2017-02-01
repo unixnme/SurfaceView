@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -29,7 +28,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -67,6 +65,8 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private int maxFocusAreas;
     private int maxMeteringAreas;
     private boolean takePictureLock;
+    List<Boolean> supportedFocusModes;
+    CountDownTimer autoFocusTimer;
     private int currentCameraFacing;
     private SensorManager sensorManager;
     private Sensor gSensor;
@@ -118,11 +118,35 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         demoCloseButton.setOnClickListener(demoOnClickListener);
         if (sharedPref.getBoolean(DEMO, true)) {
             demoView.setVisibility(View.VISIBLE);
-//            Intent intent = new Intent(this, DemoView.class);
-//            startActivity(intent);
         } else {
             demoView.setVisibility(View.GONE);
         }
+
+        autoFocusTimer = new CountDownTimer(3000, 3000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // nothing to do
+            }
+
+            @Override
+            public void onFinish() {
+                // remove focus area
+                // set focus to picture / video if possible
+                if (camera == null)
+                    return;
+
+                Camera.Parameters parameters = camera.getParameters();
+                parameters.setFocusAreas(null);
+                if (supportedFocusModes == null)
+                    supportedFocusModes = getSupportedFocusModes(parameters);
+                if (supportedFocusModes.get(FOCUS_CONTINUOUS_PICTURE)) {
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                } else if (supportedFocusModes.get(FOCUS_CONTINUOUS_VIDEO)) {
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+                }
+                camera.setParameters(parameters);
+            }
+        };
     }
 
     protected void onResume() {
@@ -204,12 +228,20 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
             previewSize = parameters.getPreviewSize();
             maxFocusAreas = parameters.getMaxNumFocusAreas();
             maxMeteringAreas = parameters.getMaxNumMeteringAreas();
-            List<Boolean> supportedFocusModes = getSupportedFocusModes(parameters);
-            if (supportedFocusModes.get(FOCUS_AUTO)) {
-                overlaidView.autoFocusSupported = true;
+            supportedFocusModes = getSupportedFocusModes(parameters);
+            List<Camera.Area> focusArea = parameters.getFocusAreas();
+
+            overlaidView.autoFocusSupported = true;
+            if (supportedFocusModes.get(FOCUS_CONTINUOUS_PICTURE)) {
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+            } else if (supportedFocusModes.get(FOCUS_CONTINUOUS_VIDEO)) {
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+            } else if (supportedFocusModes.get(FOCUS_AUTO)) {
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
             } else {
                 overlaidView.autoFocusSupported = false;
             }
+            camera.setParameters(parameters);
             camera.startPreview();
         } catch (IOException ie) {
             Log.e(TAG, "setPreviewDisplay fails");
@@ -316,13 +348,20 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         if (maxMeteringAreas >= 1)
             parameters.setMeteringAreas(focusArea);
 
+        String focusMode = parameters.getFocusMode();
+        if (!focusMode.equals(Camera.Parameters.FOCUS_MODE_AUTO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
         camera.setParameters(parameters);
         camera.autoFocus(this);
     }
 
     public void onAutoFocus(boolean success, Camera camera) {
-        if (success && camera != null)
+        if (success && camera != null) {
             camera.cancelAutoFocus();
+            autoFocusTimer.cancel();
+            autoFocusTimer.start();
+        }
     }
 
 

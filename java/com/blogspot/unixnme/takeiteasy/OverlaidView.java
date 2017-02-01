@@ -34,6 +34,8 @@ public class OverlaidView extends View {
         paint.setStrokeWidth(3);
         paint.setStyle(Paint.Style.STROKE);
         drawRect = false;
+
+        // this will continuously erase the focus area after 1 sec
         countDownTimer = new CountDownTimer(1000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
