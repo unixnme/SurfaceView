@@ -161,6 +161,18 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
                     takePictureWithCorrectOrientation(instance, null, instance);
             }
         });
+        captureButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.i(TAG, "capture button long clicked");
+
+                if (!takePictureLock && camera != null) {
+                    takePictureLock = true;
+                    takePictureInThreeSeconds(camera);
+                }
+                return true;
+            }
+        });
         flipCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -417,6 +429,38 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         camera.takePicture(shutter, raw, jpeg);
     }
 
+    private void takePictureInThreeSeconds(Camera camera) {
+        // lock focus
+        if (supportedFocusModes != null && supportedFocusModes.get(FOCUS_AUTO)) {
+            Camera.Parameters parameters = camera.getParameters();
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+            camera.setParameters(parameters);
+            camera.cancelAutoFocus();
+        }
+        autoFocusTimer.cancel();
+        autoFocusTimer.start();
+
+        // take picture in 3 secs
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "schedule take pic after long press");
+                takePictureWithCorrectOrientation(instance, null, instance);
+            }
+        }, 3000);
+        new CountDownTimer(3000, 1000) {
+            public void onTick(long ms) {
+                String text = String.valueOf(Math.round((float)ms/1000));
+                Log.d(TAG, "countdown timer: " + ms);
+                overlaidTextView.writeText(text);
+            }
+
+            public void onFinish() {
+                overlaidTextView.writeText("");
+            }
+        }.start();
+    }
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event){
@@ -431,36 +475,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
             takePictureLock = true;
             Log.i(TAG, "long press");
 
-            // lock focus
-            if (supportedFocusModes != null && supportedFocusModes.get(FOCUS_AUTO)) {
-                Camera.Parameters parameters = camera.getParameters();
-                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-                camera.setParameters(parameters);
-                camera.cancelAutoFocus();
-            }
-            autoFocusTimer.cancel();
-            autoFocusTimer.start();
-
-            // take picture in 3 secs
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Log.i(TAG, "schedule take pic after long press");
-                    takePictureWithCorrectOrientation(instance, null, instance);
-                }
-            }, 3000);
-            new CountDownTimer(3000, 1000) {
-                public void onTick(long ms) {
-                    String text = String.valueOf(Math.round((float)ms/1000));
-                    Log.d(TAG, "countdown timer: " + ms);
-                    overlaidTextView.writeText(text);
-                }
-
-                public void onFinish() {
-                    overlaidTextView.writeText("");
-                }
-            }.start();
+            takePictureInThreeSeconds(camera);
             return true;
         }
         return onKeyLongPress(keyCode,event);
