@@ -76,6 +76,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_weight="4">
         </RelativeLayout>
 
@@ -89,8 +90,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:padding="0dp"
                 android:layout_weight="1">
                 <TextView
@@ -151,6 +152,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="4">
+
         </RelativeLayout>
 
     </com.blogspot.unixnme.takeiteasy.DemoView>
