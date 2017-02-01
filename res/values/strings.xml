@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Take It Easy</string>
-    <string name="instructions">Volume key short press: Capture in 0.5s\nVolume key long press: Capture in 3s</string>
+    <string name="instructions">Volume key short press:\nCapture in 0.5s\n\nVolume key long press:\nCapture in 3s</string>
     <string name="check_box_text">OK. I got it!</string>
     <string name="close_button">Close</string>
 </resources>

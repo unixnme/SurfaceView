@@ -91,6 +91,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
+                android:padding="0dp"
                 android:layout_weight="1">
                 <TextView
                     android:layout_width="wrap_content"
@@ -102,37 +103,48 @@
                     android:rotation="-90"
                     android:textColor="@color/white" />
             </RelativeLayout>
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
+                android:orientation="horizontal"
                 android:layout_weight="1">
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:rotation="-90"
-                    android:text="@string/check_box_text"
-                    android:textColor="@color/white"
-                    android:buttonTint="@color/white"
-                    android:id="@+id/checkBox"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="1">
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:rotation="-90"
-                    android:id="@+id/close_button"
-                    android:text="@string/close_button"/>
-            </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|right"
+                    android:padding="0dp"
+                    android:layout_margin="0dp"
+                    android:layout_weight="1">
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|right"
+                        android:rotation="-90"
+                        android:padding="0dp"
+                        android:layout_margin="0dp"
+                        android:text="@string/check_box_text"
+                        android:textColor="@color/white"
+                        android:buttonTint="@color/white"
+                        android:id="@+id/checkBox"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="0dp"
+                    android:layout_margin="0dp"
+                    android:gravity="center_vertical|left"
+                    android:layout_weight="1">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:padding="0dp"
+                        android:layout_margin="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|left"
+                        android:rotation="-90"
+                        android:id="@+id/close_button"
+                        android:text="@string/close_button"/>
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout
