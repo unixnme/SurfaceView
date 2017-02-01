@@ -93,7 +93,7 @@ public class OverlaidView extends View {
     // animate take picture animation
     void animateTakePicture() {
         final long animationDuration = 100;
-        final float animationAlpha = 0.5f;
+        final float animationAlpha = 0.75f;
         AlphaAnimation fadeIn = new AlphaAnimation(0, animationAlpha);
         fadeIn.setDuration(animationDuration);
         AlphaAnimation fadeOut = new AlphaAnimation(animationAlpha, 0);

@@ -374,6 +374,9 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (camera == null)
+            return true;
+
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             if (!takePictureLock) {
                 event.startTracking();
@@ -417,13 +420,26 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event){
-        if (camera != null && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
+        if (camera == null)
+            return true;
+
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             if (takePictureLock)
                 // skip it if already take picture in the queue
                 return true;
 
             takePictureLock = true;
             Log.i(TAG, "long press");
+
+            // lock focus
+            if (supportedFocusModes != null && supportedFocusModes.get(FOCUS_AUTO)) {
+                Camera.Parameters parameters = camera.getParameters();
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                camera.setParameters(parameters);
+                camera.cancelAutoFocus();
+            }
+            autoFocusTimer.cancel();
+            autoFocusTimer.start();
 
             // take picture in 3 secs
             Handler handler = new Handler();
@@ -452,7 +468,10 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (camera != null && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+        if (camera == null)
+            return true;
+
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
 
             if (takePictureLock)
                 return true;
