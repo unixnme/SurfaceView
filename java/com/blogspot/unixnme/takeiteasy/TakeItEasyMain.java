@@ -100,7 +100,6 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         overlaidTextView = (OverlaidTextView) findViewById(R.id.countdown_textview);
         overlaidTextView.setMainInstance(this);
         flipCameraButton = (FloatingActionButton) findViewById(R.id.switch_camera_FAB);
-        frameLayout = (FrameLayout) findViewById(R.id.image_button_frame_layout);
         captureButton = (FloatingActionButton) findViewById(R.id.capture_button);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         gSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
