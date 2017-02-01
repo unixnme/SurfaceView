@@ -324,12 +324,19 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
                 previewSize = parameters.getPreviewSize();
                 maxFocusAreas = parameters.getMaxNumFocusAreas();
                 maxMeteringAreas = parameters.getMaxNumMeteringAreas();
-                List<Boolean> supportedFocusModes = getSupportedFocusModes(parameters);
-                if (supportedFocusModes.get(FOCUS_AUTO)) {
-                    overlaidView.autoFocusSupported = true;
+                supportedFocusModes = getSupportedFocusModes(parameters);
+
+                overlaidView.autoFocusSupported = true;
+                if (supportedFocusModes.get(FOCUS_CONTINUOUS_PICTURE)) {
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                } else if (supportedFocusModes.get(FOCUS_CONTINUOUS_VIDEO)) {
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+                } else if (supportedFocusModes.get(FOCUS_AUTO)) {
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
                 } else {
                     overlaidView.autoFocusSupported = false;
                 }
+                camera.setParameters(parameters);
                 camera.startPreview();
             } catch (IOException ie) {
                 Log.e(TAG, "setPreviewDisplay fails");
