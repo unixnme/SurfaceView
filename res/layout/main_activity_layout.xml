@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     app:backgroundTint="@color/white"
                     android:layout_margin="10dp"
-                    android:src="@drawable/flip_camera" />
+                    android:src="@drawable/switch_camera" />
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
