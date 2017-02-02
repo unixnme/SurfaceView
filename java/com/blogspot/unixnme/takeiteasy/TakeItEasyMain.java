@@ -213,6 +213,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         gravityY = event.values[1];
 
         gravityAngle = (float) (Math.atan2(-gravityY, gravityX) * 180 / Math.PI);
+        overlaidTextView.setGravityAngle(gravityAngle);
 
         ViewCompat.animate(flipCameraButton).rotation(gravityAngle).setDuration(0).start();
     }

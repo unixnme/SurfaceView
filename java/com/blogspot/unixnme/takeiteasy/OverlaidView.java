@@ -13,6 +13,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class OverlaidView extends View {
     private static final String TAG = OverlaidView.class.getSimpleName();
     private static final float FOCUS_WIDTH = 100;
@@ -25,6 +27,10 @@ public class OverlaidView extends View {
     private CountDownTimer countDownTimer;
     private boolean drawRect;
     boolean autoFocusSupported;
+
+    public OverlaidView(Context context) {
+        super(context);
+    }
 
     public OverlaidView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -47,6 +53,10 @@ public class OverlaidView extends View {
                 invalidate();
             }
         };
+    }
+
+    public OverlaidView(Context context, AttributeSet attributeSet, int defStyleAttr) {
+        super(context, attributeSet, defStyleAttr);
     }
 
     void setMainInstance(TakeItEasyMain instance) {
@@ -82,6 +92,7 @@ public class OverlaidView extends View {
 
     @Override
     public synchronized void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         if (drawRect && autoFocusSupported) {
             canvas.drawRect(new Rect((int) x1, (int) y1, (int) x2, (int) y2), paint);
             countDownTimer.cancel();

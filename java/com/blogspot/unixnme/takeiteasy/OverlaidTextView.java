@@ -14,6 +14,11 @@ public class OverlaidTextView extends View {
     private Paint paint;
     private TakeItEasyMain mainInstance;
     private String textToWrite;
+    private float gravityAngle;
+
+    public OverlaidTextView(Context context) {
+        super(context);
+    }
 
     public OverlaidTextView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -26,6 +31,10 @@ public class OverlaidTextView extends View {
         textToWrite = "";
     }
 
+    public OverlaidTextView(Context context, AttributeSet attributeSet, int defStyleAttr) {
+        super(context, attributeSet, defStyleAttr);
+    }
+
     void setMainInstance(TakeItEasyMain instance) {
         mainInstance = instance;
     }
@@ -35,11 +44,16 @@ public class OverlaidTextView extends View {
         invalidate();
     }
 
+    void setGravityAngle(float gravityAngle) {
+        this.gravityAngle = gravityAngle;
+    }
+
     @Override
     public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         float x = getWidth()/2;
         float y = getHeight()/2;
-        canvas.rotate(mainInstance.gravityAngle, x, y);
+        canvas.rotate(gravityAngle, x, y);
         int textSize;
         if (textToWrite.length() > 1)
             textSize = 100;
