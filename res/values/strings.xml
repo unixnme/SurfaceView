@@ -4,5 +4,6 @@
     <string name="check_box_text">OK. I got it!</string>
     <string name="close_button">Close</string>
     <string name="credits">Author: Young Mo Kang\nProduct Manager: Sujin Park</string>
-    <string name="switch_camera_link_description">  <a href='https://icons8.com/web-app/3254/Switch-Camera'>https://icons8.com/web-app/3254/Switch-Camera</a></string>
+    <string name="switch_camera_link_description">  <a href='https://icons8.com/web-app/3254/Switch-Camera'>https://icons8.com/web-app/3254/Switch-Camera</a>\n</string>
+    <string name="app_icon_link_description">  <a href='http://adamwhitcroft.com/batch/'>http://adamwhitcroft.com/batch/</a>\n</string>
 </resources>

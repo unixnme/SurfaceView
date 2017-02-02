@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:text="  Young Mo Kang\n"
         android:textColor="@color/white"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,9 +31,19 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="App Icon"
+        android:textColor="@color/gray" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_icon_link_description"
+        android:id="@+id/app_icon_text" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Switch Camera Icon"
         android:textColor="@color/gray" />
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
