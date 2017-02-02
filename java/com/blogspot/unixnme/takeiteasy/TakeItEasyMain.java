@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -77,15 +78,12 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private CheckBox demoCheckBox;
     private Button demoCloseButton;
     private DemoView demoView;
-    private View.OnClickListener demoOnClickListener;
+    private View.OnClickListener demoOnClickListener, infoOnClickListener;
+    private TextView infoText;
 
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-
-        // launchh credit page
-        Intent intent = new Intent(this, CreditActivity.class);
-        startActivity(intent);
 
         instance = this;
         Window window = getWindow();
@@ -127,6 +125,15 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         } else {
             demoView.setVisibility(View.GONE);
         }
+        infoText = (TextView) findViewById(R.id.info_text);
+        infoOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(instance, CreditActivity.class);
+                startActivity(intent);
+            }
+        };
+        infoText.setOnClickListener(infoOnClickListener);
 
         autoFocusTimer = new CountDownTimer(3000, 3000) {
             @Override
