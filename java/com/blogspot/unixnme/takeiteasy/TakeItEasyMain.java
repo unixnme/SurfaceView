@@ -375,11 +375,16 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         camera.autoFocus(this);
     }
 
-    public void onAutoFocus(boolean success, Camera camera) {
-        if (success && camera != null) {
+    public synchronized void onAutoFocus(boolean success, Camera camera) {
+        if (camera == null)
+            return;
+
+        if (success) {
             camera.cancelAutoFocus();
             autoFocusTimer.cancel();
             autoFocusTimer.start();
+        } else {
+            camera.autoFocus(this);
         }
     }
 
