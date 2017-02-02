@@ -63,7 +63,6 @@
 
     </LinearLayout>
 
-
     <com.blogspot.unixnme.takeiteasy.DemoView
         style="@style/Transparent"
         android:background="#aa000000"
