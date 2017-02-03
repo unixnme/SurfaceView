@@ -3,7 +3,13 @@
     <string name="instructions">Volume key short press:\nCapture in 0.5s\n\nVolume key long press:\nCapture in 3s</string>
     <string name="check_box_text">OK. I got it!</string>
     <string name="close_button">Close</string>
-    <string name="credits">Author: Young Mo Kang\nProduct Manager: Sujin Park</string>
-    <string name="switch_camera_link_description">  <a href='https://icons8.com/web-app/3254/Switch-Camera'>https://icons8.com/web-app/3254/Switch-Camera</a>\n</string>
-    <string name="app_icon_link_description">  <a href='http://adamwhitcroft.com/batch/'>http://adamwhitcroft.com/batch/</a>\n</string>
+    <string name="switch_camera_link_description">
+        <a href='https://icons8.com/web-app/3254/Switch-Camera'>https://icons8.com/web-app/3254/Switch-Camera</a>\n
+    </string>
+    <string name="app_icon_link_description">
+        <a href='http://adamwhitcroft.com/batch/'>http://adamwhitcroft.com/batch/</a>\n
+    </string>
+    <string name="privacy_policy">
+        <a href='http://unixnme.blogspot.kr/p/takeiteasy.html'>http://unixnme.blogspot.kr/p/takeiteasy.html</a>\n
+    </string>
 </resources>
