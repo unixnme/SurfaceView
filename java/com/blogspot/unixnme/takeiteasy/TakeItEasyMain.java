@@ -1,5 +1,6 @@
 package com.blogspot.unixnme.takeiteasy;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -237,6 +239,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         cameraId = getCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
         currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_BACK;
         camera = Camera.open(cameraId);
+        setCameraDisplayOrientation(this, cameraId, camera);
 
         if (camera == null) {
             Log.e(TAG, "Camera.open(" + cameraId + ") failed");
@@ -337,6 +340,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         int cameraId = getCameraId(currentCameraFacing);
 
         camera = Camera.open(cameraId);
+        setCameraDisplayOrientation(this, cameraId, camera);
 
         if (camera != null) {
             Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
@@ -560,6 +564,30 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
+    }
+
+    // this function is straight from Android Developers Website at
+    // https://developer.android.com/reference/android/hardware/Camera.html#setDisplayOrientation(int)
+    public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0: degrees = 0; break;
+            case Surface.ROTATION_90: degrees = 90; break;
+            case Surface.ROTATION_180: degrees = 180; break;
+            case Surface.ROTATION_270: degrees = 270; break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        camera.setDisplayOrientation(result);
     }
 
 }
