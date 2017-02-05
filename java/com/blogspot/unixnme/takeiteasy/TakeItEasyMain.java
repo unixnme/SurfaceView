@@ -172,7 +172,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         thumbnailView = (ImageView) findViewById(R.id.thumbnail_view);
     }
 
-    protected void onResume() {
+    protected synchronized void onResume() {
         super.onResume();
         takePictureLock = false;
         sensorManager.registerListener(this, gSensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -206,7 +206,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         });
     }
 
-    protected void onPause() {
+    protected synchronized void onPause() {
         super.onPause();
         if (camera != null) {
             camera.stopPreview();
