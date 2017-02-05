@@ -78,9 +78,10 @@
             android:layout_weight="1">
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:gravity="center|right"
             android:layout_weight="4">
             <android.support.design.widget.FloatingActionButton
@@ -89,7 +90,12 @@
                 app:backgroundTint="@color/white"
                 android:layout_margin="10dp"
                 android:id="@+id/capture_button" />
-        </RelativeLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/thumbnail_view"
+                android:visibility="invisible"/>
+        </LinearLayout>
 
     </LinearLayout>
 

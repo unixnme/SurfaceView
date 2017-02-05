@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -30,9 +32,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,6 +69,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private FloatingActionButton captureButton;
     private int surfaceWidth, surfaceHeight, pxWidth, pxHeight;
     private float dpWidth, dpHeight;
+    private int pictureWidth, pictureHeight;
     private int cameraId;
     private int maxFocusAreas;
     private int maxMeteringAreas;
@@ -82,6 +87,8 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private DemoView demoView;
     private View.OnClickListener demoOnClickListener, infoOnClickListener;
     private TextView infoText;
+    private ImageView thumbnailView;
+    Bitmap thumbnail;
 
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -162,6 +169,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
                 camera.setParameters(parameters);
             }
         };
+        thumbnailView = (ImageView) findViewById(R.id.thumbnail_view);
     }
 
     protected void onResume() {
@@ -259,6 +267,8 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
             maxMeteringAreas = parameters.getMaxNumMeteringAreas();
             supportedFocusModes = getSupportedFocusModes(parameters);
             List<Camera.Area> focusArea = parameters.getFocusAreas();
+            pictureWidth = parameters.getPictureSize().width;
+            pictureHeight = parameters.getPictureSize().height;
 
             overlaidView.autoFocusSupported = true;
             if (supportedFocusModes.get(FOCUS_CONTINUOUS_PICTURE)) {
@@ -537,11 +547,21 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         try {
             FileOutputStream fos = new FileOutputStream(filename);
             fos.write(data);
+            thumbnail = BitmapFactory.decodeByteArray(data, 0, data.length);
             fos.close();
         } catch (IOException e) {
 
         }
         addToGallery(filename);
+
+        // add thumbnail image
+        final int THUMBNAIL_SIZE = 64;
+        thumbnail = Bitmap.createScaledBitmap(thumbnail, THUMBNAIL_SIZE, THUMBNAIL_SIZE, false);
+        if (thumbnailView.getVisibility() != View.VISIBLE) {
+            thumbnailView.setVisibility(View.VISIBLE);
+        }
+        thumbnailView.setImageBitmap(thumbnail);
+
         takePictureLock = false;
         camera.startPreview();
     }
