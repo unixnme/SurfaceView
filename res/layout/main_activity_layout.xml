@@ -76,7 +76,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="10dp"
                 android:id="@+id/demo_top_layout">
 
             </FrameLayout>
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/instructions"
                     android:textSize="15sp"
-                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_gravity="center_horizontal"
                     android:textColor="@color/white" />
 
             </FrameLayout>
@@ -123,7 +123,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="10dp"
                 android:id="@+id/demo_bot_layout">
 
             </FrameLayout>

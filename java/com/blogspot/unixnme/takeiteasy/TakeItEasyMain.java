@@ -8,12 +8,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.LayerDrawable;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -27,12 +29,15 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -122,6 +127,50 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         demoView = (DemoView) findViewById(R.id.demo_layout);
         demoCheckBox = (CheckBox) findViewById(R.id.checkBox);
         demoCloseButton = (Button) findViewById(R.id.close_button);
+
+
+        demoFrameLayoutTop = (FrameLayout) findViewById(R.id.demo_top_layout);
+        demoFrameLayoutBot = (FrameLayout) findViewById(R.id.demo_bot_layout);
+
+        ViewTreeObserver vtoTop = flipCameraButton.getViewTreeObserver();
+        vtoTop.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                int height = flipCameraButton.getMeasuredHeight();
+                demoFrameLayoutTop.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+
+                ViewTreeObserver obs = flipCameraButton.getViewTreeObserver();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    obs.removeOnGlobalLayoutListener(this);
+                } else {
+                    obs.removeGlobalOnLayoutListener(this);
+                }
+            }
+
+        });
+
+        ViewTreeObserver vtoBot = captureButton.getViewTreeObserver();
+        vtoBot.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                int height = captureButton.getMeasuredHeight();
+                demoFrameLayoutBot.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+
+                ViewTreeObserver obs = captureButton.getViewTreeObserver();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    obs.removeOnGlobalLayoutListener(this);
+                } else {
+                    obs.removeGlobalOnLayoutListener(this);
+                }
+            }
+
+        });
+
+
         demoOnClickListener = new View.OnClickListener() {
             public void onClick(View v) {
                 if (demoCheckBox.isChecked())
@@ -144,11 +193,6 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
             }
         };
         infoText.setOnClickListener(infoOnClickListener);
-        demoFrameLayoutTop = (FrameLayout) findViewById(R.id.demo_top_layout);
-        demoFrameLayoutTop.setMinimumHeight(flipCameraButton.getHeight());
-        demoFrameLayoutBot = (FrameLayout) findViewById(R.id.demo_bot_layout);
-        demoFrameLayoutBot.setMinimumHeight(captureButton.getHeight());
-
 
         autoFocusTimer = new CountDownTimer(3000, 3000) {
             @Override
@@ -180,6 +224,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
 
     protected synchronized void onResume() {
         super.onResume();
+
         takePictureLock = false;
         sensorManager.registerListener(this, gSensor, SensorManager.SENSOR_DELAY_NORMAL);
         captureButton.setOnClickListener(new View.OnClickListener() {
@@ -561,7 +606,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         addToGallery(filename);
 
         // add thumbnail image
-        final int THUMBNAIL_SIZE = 64;
+        final int THUMBNAIL_SIZE = 256;
         thumbnail = Bitmap.createScaledBitmap(thumbnail, THUMBNAIL_SIZE, THUMBNAIL_SIZE, false);
         if (thumbnailView.getVisibility() != View.VISIBLE) {
             thumbnailView.setVisibility(View.VISIBLE);
