@@ -88,6 +88,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private View.OnClickListener demoOnClickListener, infoOnClickListener;
     private TextView infoText;
     private ImageView thumbnailView;
+    private FrameLayout demoFrameLayoutTop, demoFrameLayoutBot;
     Bitmap thumbnail;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +144,11 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
             }
         };
         infoText.setOnClickListener(infoOnClickListener);
+        demoFrameLayoutTop = (FrameLayout) findViewById(R.id.demo_top_layout);
+        demoFrameLayoutTop.setMinimumHeight(flipCameraButton.getHeight());
+        demoFrameLayoutBot = (FrameLayout) findViewById(R.id.demo_bot_layout);
+        demoFrameLayoutBot.setMinimumHeight(captureButton.getHeight());
+
 
         autoFocusTimer = new CountDownTimer(3000, 3000) {
             @Override
