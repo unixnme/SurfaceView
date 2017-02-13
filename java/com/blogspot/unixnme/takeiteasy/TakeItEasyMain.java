@@ -137,7 +137,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
 
             @Override
             public void onGlobalLayout() {
-                int height = flipCameraButton.getMeasuredHeight();
+                int height = flipCameraButton.getMeasuredHeight() + 20;
                 demoFrameLayoutTop.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
 
                 ViewTreeObserver obs = flipCameraButton.getViewTreeObserver();
@@ -156,7 +156,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
 
             @Override
             public void onGlobalLayout() {
-                int height = captureButton.getMeasuredHeight();
+                int height = captureButton.getMeasuredHeight() + 20;
                 demoFrameLayoutBot.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
 
                 ViewTreeObserver obs = captureButton.getViewTreeObserver();
