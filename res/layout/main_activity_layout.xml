@@ -59,6 +59,14 @@
             android:layout_gravity="bottom|left"
             android:visibility="invisible"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:id="@+id/fps_text_view"/>
+
     </FrameLayout>
 
     <com.blogspot.unixnme.takeiteasy.DemoView

@@ -53,7 +53,7 @@ import java.util.List;
 import static android.os.Environment.DIRECTORY_PICTURES;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
-public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback, Camera.ShutterCallback, SensorEventListener {
+public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.Callback, Camera.AutoFocusCallback, Camera.PictureCallback, Camera.ShutterCallback, SensorEventListener, Camera.PreviewCallback, FrequencyCounter.CallBack {
 
     private static final String TAG = TakeItEasyMain.class.getSimpleName();
     private static final int FOCUS_AUTO = 0;
@@ -92,9 +92,11 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
     private DemoView demoView;
     private View.OnClickListener demoOnClickListener, infoOnClickListener;
     private TextView infoText;
+    private TextView fpsTextView;
     private ImageView thumbnailView;
     private FrameLayout demoFrameLayoutTop, demoFrameLayoutBot;
     Bitmap thumbnail;
+    private FrequencyCounter frequencyCounter = new FrequencyCounter();
 
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -127,7 +129,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         demoView = (DemoView) findViewById(R.id.demo_layout);
         demoCheckBox = (CheckBox) findViewById(R.id.checkBox);
         demoCloseButton = (Button) findViewById(R.id.close_button);
-
+        fpsTextView = (TextView) findViewById(R.id.fps_text_view);
 
         demoFrameLayoutTop = (FrameLayout) findViewById(R.id.demo_top_layout);
         demoFrameLayoutBot = (FrameLayout) findViewById(R.id.demo_bot_layout);
@@ -264,6 +266,7 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
             camera.release();
             camera = null;
         }
+        frequencyCounter.stop();
         sensorManager.unregisterListener(this);
     }
 
@@ -332,7 +335,10 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
                 overlaidView.autoFocusSupported = false;
             }
             camera.setParameters(parameters);
+            camera.setPreviewCallback(this);
             camera.startPreview();
+            frequencyCounter.setFrequencyCallback(this);
+            frequencyCounter.start(1);
         } catch (IOException ie) {
             Log.e(TAG, "setPreviewDisplay fails");
         }
@@ -428,7 +434,11 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
                     overlaidView.autoFocusSupported = false;
                 }
                 camera.setParameters(parameters);
+                camera.setPreviewCallback(this);
                 camera.startPreview();
+                frequencyCounter.setFrequencyCallback(this);
+                frequencyCounter.start(1);
+
             } catch (IOException ie) {
                 Log.e(TAG, "setPreviewDisplay fails");
             }
@@ -661,6 +671,13 @@ public class TakeItEasyMain extends AppCompatActivity implements SurfaceHolder.C
         camera.setDisplayOrientation(result);
     }
 
+    public void onPreviewFrame(byte[] data, Camera camera) {
+        frequencyCounter.increment();
+    }
+
+    public void onFrequencyCalculated(double freq) {
+        fpsTextView.setText("FPS: " + Double.toString(freq));
+    }
 }
 
 
